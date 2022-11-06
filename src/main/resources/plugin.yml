@@ -1,0 +1,6 @@
+name: Shimenawa For SimSimE
+version: '${project.version}'
+main: kr.cafemoca.shimenawa.Shimenawa
+api-version: 1.19
+authors: [ CafeMoca ]
+description: For Wat?
