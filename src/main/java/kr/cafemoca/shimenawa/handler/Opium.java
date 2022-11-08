@@ -1,6 +1,7 @@
 package kr.cafemoca.shimenawa.handler;
 
 import kr.cafemoca.shimenawa.utils.PluginItems;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -8,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Random;
@@ -32,12 +34,12 @@ public class Opium implements Listener {
 					int random = getRandomInt(2);
 					switch (random) {
 						case 0:
-							p.sendMessage("§cYou failed to get liquid opium.");
+							p.sendMessage("§c액체 아편 획득에 실패하였습니다.");
 							e.getClickedBlock().setType(Material.AIR);
 							p.playSound(p, Sound.BLOCK_GRASS_BREAK, 1.0F, 0.8F);
 							break;
 						case 1:
-							p.sendMessage("§aYou have successfully obtained liquid opium");
+							p.sendMessage("§a액체 아편 획득에 성공하셨습니다.");
 							e.getClickedBlock().setType(Material.AIR);
 							p.playSound(p, Sound.BLOCK_GRASS_BREAK, 1.0F, 0.8F);
 							e.getClickedBlock().getWorld().dropItem(e.getClickedBlock().getLocation(),
@@ -52,6 +54,20 @@ public class Opium implements Listener {
 							break;
 					}
 				}
+			}
+		}
+	}
+
+	@EventHandler
+	public void onClickCampFire(PlayerInteractEvent e) { // 작동안해 tq
+		if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+			Player p = e.getPlayer();
+			if (e.getClickedBlock().getType() == Material.CAMPFIRE) {
+				ItemStack NULL = PluginItems.of(Material.WHITE_STAINED_GLASS_PANE).name("§r").create();
+				Inventory inv = Bukkit.createInventory(null, 9, "건조기");
+				inv.setItem(1, NULL);
+
+				p.openInventory(inv);
 			}
 		}
 	}
