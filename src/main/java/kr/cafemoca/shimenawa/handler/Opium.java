@@ -4,6 +4,7 @@ import kr.cafemoca.shimenawa.utils.PluginItems;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.block.data.type.Campfire;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -59,13 +60,14 @@ public class Opium implements Listener {
 	}
 
 	@EventHandler
-	public void onClickCampFire(PlayerInteractEvent e) { // 작동안해 tq
+	public void onClickCampFire(PlayerInteractEvent e) { // ???????
 		if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			Player p = e.getPlayer();
-			if (e.getClickedBlock().getType() == Material.CAMPFIRE) {
-				ItemStack NULL = PluginItems.of(Material.WHITE_STAINED_GLASS_PANE).name("§r").create();
-				Inventory inv = Bukkit.createInventory(null, 9, "건조기");
-				inv.setItem(1, NULL);
+			if (e.getClickedBlock().getBlockData() instanceof Campfire) {
+				Inventory inv = Bukkit.createInventory(null, 9, "건조대");
+				ItemStack pane = PluginItems.of(Material.WHITE_STAINED_GLASS_PANE).data((byte) 2).name("§r").create(); //Cannot get new data of Modern Material
+
+				inv.setItem(2, pane);
 
 				p.openInventory(inv);
 			}
