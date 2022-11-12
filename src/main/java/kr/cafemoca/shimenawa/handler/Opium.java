@@ -9,9 +9,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Random;
 
@@ -59,18 +62,62 @@ public class Opium implements Listener {
 		}
 	}
 
+	Inventory inv = Bukkit.createInventory(null, 9, "건조대");
+
+	ItemStack pane = new ItemStack(Material.WHITE_STAINED_GLASS_PANE);
+	ItemStack green = new ItemStack(Material.LIME_STAINED_GLASS);
+
 	@EventHandler
 	public void onClickCampFire(PlayerInteractEvent e) { // ???????
 		if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			Player p = e.getPlayer();
 			if (e.getClickedBlock().getBlockData() instanceof Campfire) {
-				Inventory inv = Bukkit.createInventory(null, 9, "건조대");
-				ItemStack pane = PluginItems.of(Material.WHITE_STAINED_GLASS_PANE).data((byte) 2).name("§r").create(); //Cannot get new data of Modern Material
+				e.setCancelled(true);
 
+				ItemMeta meta = pane.getItemMeta();
+				meta.setDisplayName("§r");
+				pane.setItemMeta(meta);
+
+				ItemMeta greenmeta = green.getItemMeta();
+				greenmeta.setDisplayName("§r§a건조하기");
+				green.setItemMeta(greenmeta);
+
+				ItemStack inf = PluginItems.of(Material.LEGACY_PAPER).name("§r§9§l[도움말]").lore("§r§f특정 아이템을 건조 또는 말릴수 있습니다.").create();
+
+				inv.setItem(0, inf);
+				inv.setItem(1, pane);
 				inv.setItem(2, pane);
+				inv.setItem(3, pane);
+				inv.setItem(5, pane);
+				inv.setItem(6, pane);
+				inv.setItem(7, pane);
+				inv.setItem(8, green);
 
 				p.openInventory(inv);
 			}
+		}
+	}
+
+	@EventHandler
+	public void onInvPaneClick(InventoryClickEvent e) {
+		if (e.getCurrentItem() != null) {
+			if (e.getCurrentItem().getType() == Material.WHITE_STAINED_GLASS_PANE || e.getCurrentItem().getType() == Material.PAPER) {
+				e.setCancelled(true);
+			}
+			if (e.getCurrentItem().getType() == Material.LIME_STAINED_GLASS) {
+				e.setCancelled(true);
+
+			}
+		}
+	}
+
+	@EventHandler
+	public void onCloseInv(InventoryCloseEvent e) {
+		if (e.getInventory() == inv) {
+			Player p = (Player) e.getPlayer();
+			ItemStack backitem = inv.getItem(4);
+			p.getInventory().addItem(backitem);
+			inv.removeItem(backitem);
 		}
 	}
 }
